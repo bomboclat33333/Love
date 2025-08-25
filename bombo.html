@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barışak mı la?</title>
+  <style>
+    :root{
+      --bg1:#ffecf5; /* pink */
+      --bg2:#ffd6e7; /* soft pink */
+      --card:#ffffffee; /* white card */
+      --text:#4b5563; /* slate-600 */
+      --title:#be185d; /* rose-700 */
+      --accent:#ec4899; /* pink-500 */
+      --accent-2:#f472b6; /* pink-400 */
+      --danger:#ef4444;
+      --muted:#9ca3af;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;display:grid;place-items:center;min-height:100vh;color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 700px at 10% 10%, #fff0f7 0%, var(--bg1) 60%),
+        radial-gradient(900px 600px at 90% 90%, #ffe4f1 0%, var(--bg2) 60%);
+      overflow:hidden;
+    }
+    /* floating hearts background */
+    .float-heart{position:fixed;opacity:.16;z-index:0;animation:rise 12s linear infinite}
+    @keyframes rise{0%{transform:translateY(100vh) scale(.6)}100%{transform:translateY(-20vh) scale(1)}}
+
+    .card{position:relative;z-index:1;width:min(800px,94vw);background:var(--card);border:1px solid #ffe1ee;border-radius:28px;padding:30px 26px 36px;box-shadow:0 20px 60px rgba(236,72,153,.25)}
+    h1{margin:0 0 8px;font-size:clamp(26px,4.8vw,40px);line-height:1.1;text-align:center;color:var(--title)}
+    p.sub{margin:0 0 22px;text-align:center;color:var(--muted);font-size:14px}
+
+    .arena{position:relative;margin:0 auto;width:min(620px,94%);height:260px;border-radius:18px;border:2px dashed #ffcfe3;background:linear-gradient(180deg,#fff, #fff6fb);display:grid;place-items:center;overflow:hidden}
+    .btns{position:relative;width:100%;height:100%}
+
+    button{appearance:none;border:none;padding:14px 22px;border-radius:999px;font-weight:800;font-size:16px;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease, background-color .2s ease;box-shadow:0 10px 22px rgba(0,0,0,.12);user-select:none}
+    button:active{transform:scale(.98)}
+    .yes{background:linear-gradient(135deg, var(--accent), var(--accent-2));color:#fff}
+    .no{background:linear-gradient(135deg,#fb7185,#ef4444);color:#fff;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+
+    .footer{margin-top:18px;text-align:center;font-size:12px;color:#a1a1aa}
+
+    /* SCREENS */
+    .screen{display:none}
+    .screen--active{display:block}
+
+    /* THANKS SCREEN */
+    .thanks{display:grid;place-items:center;text-align:center;padding:10px 0}
+    .thanks h2{color:#be185d;margin:12px 0 8px;font-size:clamp(22px,4vw,34px)}
+    .thanks p{margin:0;color:#6b7280}
+
+    /* Cute cat SVG sizing */
+    .kitty{width:min(220px,60vw);height:auto;filter:drop-shadow(0 12px 24px rgba(236,72,153,.35))}
+
+  </style>
+</head>
+<body>
+  <!-- Floating background hearts -->
+  <svg class="float-heart" viewBox="0 0 24 24" style="left:10%; animation-delay:0s; animation-duration:13s"><path fill="#ec4899" d="M12 21s-6.716-4.317-9.193-7.17C.677 11.322 1.064 8.4 3.05 6.857c1.582-1.23 3.9-.988 5.281.371L12 10l3.669-2.772c1.382-1.36 3.7-1.602 5.282-.371 1.986 1.542 2.373 4.465.243 6.973C18.716 16.683 12 21 12 21z"/></svg>
+  <svg class="float-heart" viewBox="0 0 24 24" style="left:70%; animation-delay:2s; animation-duration:11s"><path fill="#f472b6" d="M12 21s-6.716-4.317-9.193-7.17C.677 11.322 1.064 8.4 3.05 6.857c1.582-1.23 3.9-.988 5.281.371L12 10l3.669-2.772c1.382-1.36 3.7-1.602 5.282-.371 1.986 1.542 2.373 4.465.243 6.973C18.716 16.683 12 21 12 21z"/></svg>
+  <svg class="float-heart" viewBox="0 0 24 24" style="left:40%; animation-delay:4s; animation-duration:14s"><path fill="#fb7185" d="M12 21s-6.716-4.317-9.193-7.17C.677 11.322 1.064 8.4 3.05 6.857c1.582-1.23 3.9-.988 5.281.371L12 10l3.669-2.772c1.382-1.36 3.7-1.602 5.282-.371 1.986 1.542 2.373 4.465.243 6.973C18.716 16.683 12 21 12 21z"/></svg>
+
+  <div class="card" role="dialog" aria-labelledby="title">
+    <!-- ASK SCREEN -->
+    <section class="screen screen--active" id="screen-ask">
+      <h1 id="title">Barışmayı kabul ediyon mu?</h1>
+      <p class="sub">Hadi la çok zor değil 💗</p>
+      <div class="arena" aria-live="polite">
+        <div class="btns" id="arena">
+          <button class="yes" id="yesBtn" aria-label="Evet">Evet</button>
+          <button class="no" id="noBtn" aria-label="Hayır">Hayır</button>
+        </div>
+      </div>
+      <div class="footer">Pembe pembe nasi? 🐾</div>
+    </section>
+
+    <!-- THANK YOU SCREEN -->
+    <section class="screen" id="screen-thanks">
+      <div class="thanks">
+        <!-- Cute cat holding a heart (inline SVG, no external files) -->
+        <svg class="kitty" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f472b6"/>
+              <stop offset="1" stop-color="#ec4899"/>
+            </linearGradient>
+          </defs>
+          <!-- cat body -->
+          <ellipse cx="128" cy="150" rx="70" ry="60" fill="#ffe4f1" stroke="#f9a8d4" stroke-width="3"/>
+          <!-- head -->
+          <circle cx="128" cy="90" r="46" fill="#fff5fa" stroke="#f9a8d4" stroke-width="3"/>
+          <!-- ears -->
+          <path d="M92 66 L74 32 L104 52 Z" fill="#fff5fa" stroke="#f9a8d4" stroke-width="3"/>
+          <path d="M164 66 L182 32 L152 52 Z" fill="#fff5fa" stroke="#f9a8d4" stroke-width="3"/>
+          <!-- face -->
+          <circle cx="110" cy="92" r="6" fill="#4b5563"/>
+          <circle cx="146" cy="92" r="6" fill="#4b5563"/>
+          <path d="M118 108 Q128 118 138 108" stroke="#4b5563" stroke-width="3" fill="none"/>
+          <!-- heart in paws -->
+          <path d="M128 114
+                   C120 100, 96 104, 96 122
+                   C96 138, 116 148, 128 160
+                   C140 148, 160 138, 160 122
+                   C160 104, 136 100, 128 114 Z" fill="url(#g1)"/>
+          <!-- paws -->
+          <ellipse cx="104" cy="150" rx="16" ry="12" fill="#fff5fa" stroke="#f9a8d4" stroke-width="3"/>
+          <ellipse cx="152" cy="150" rx="16" ry="12" fill="#fff5fa" stroke="#f9a8d4" stroke-width="3"/>
+          <!-- tail -->
+          <path d="M190 160 q26 8 26 28 q0 14-12 16 q-12 2-22-12" fill="none" stroke="#f9a8d4" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <h2>Teşekkür ederim aşkım 💖</h2>
+        <p>İyi ki varsın. Şimdi birlikte güzelleşelim 💞</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const arena = document.getElementById('arena');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn  = document.getElementById('noBtn');
+    const screenAsk = document.getElementById('screen-ask');
+    const screenThanks = document.getElementById('screen-thanks');
+
+    function placeYes(){
+      yesBtn.style.position='absolute';
+      yesBtn.style.left='24px';
+      yesBtn.style.top='24px';
+    }
+    function randomInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function moveNo(){
+      const c = arena.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
+      const pad=6; const maxL=c.width-b.width-pad; const maxT=c.height-b.height-pad;
+      const left=randomInt(pad, Math.max(pad, Math.floor(maxL)));
+      const top =randomInt(pad, Math.max(pad, Math.floor(maxT)));
+      noBtn.style.left=left+'px';
+      noBtn.style.top =top +'px';
+    }
+    ['mouseenter','mouseover','focus','click','touchstart'].forEach(ev=>{
+      noBtn.addEventListener(ev, e=>{ e.preventDefault(); moveNo(); }, {passive:false});
+    });
+
+    function showThanks(){
+      // swap screens
+      screenAsk.classList.remove('screen--active');
+      screenAsk.classList.add('screen');
+      screenThanks.classList.remove('screen');
+      screenThanks.classList.add('screen--active');
+      // spawn celebratory hearts
+      for(let i=0;i<18;i++) spawnHeart();
+    }
+
+    function spawnHeart(){
+      const h = document.createElement('div');
+      h.innerHTML = '❤';
+      h.style.position='fixed';
+      h.style.left = Math.random()*100+'vw';
+      h.style.bottom='-10vh';
+      h.style.fontSize = (14+Math.random()*28)+'px';
+      h.style.opacity = .9;
+      h.style.zIndex = 2;
+      h.style.animation = `rise2 ${8+Math.random()*6}s linear forwards`;
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 16000);
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `@keyframes rise2{from{transform:translateY(0)}to{transform:translateY(-120vh)}}`;
+    document.head.appendChild(style);
+
+    yesBtn.addEventListener('click', showThanks);
+
+    window.addEventListener('load', ()=>{ placeYes(); moveNo(); });
+    window.addEventListener('resize', ()=>{ placeYes(); moveNo(); });
+  </script>
+</body>
+</html>
